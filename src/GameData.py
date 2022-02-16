@@ -17,7 +17,7 @@ class Color(Enum):
     WHITE = auto()
     BLACK = auto()
     YELLOW = auto()
-    BLUE = auto()
+    ORANGE = auto()
     NONE = 99
 
     def random(self):
@@ -85,6 +85,9 @@ class Guess:
             r = f"{r}{a.char()}"
         return r
 
+    def __eq__(self, other):
+        return self.c1 == other.c1 and self.c2 == other.c2 and self.c3 == other.c3 and self.c4 == other.c4
+
     def __repr__(self) -> str:
         return f"({self.c1}, {self.c2}, {self.c3}, {self.c4})"
 
@@ -94,7 +97,7 @@ class Guess:
 class GameData:
     def __init__(self, game_type: GameType) -> None:
         self.game_type = game_type
-        self.colors = [Color.RED, Color.GREEN, Color.WHITE, Color.BLACK, Color.YELLOW, Color.BLUE]
+        self.colors = [Color.RED, Color.GREEN, Color.WHITE, Color.BLACK, Color.YELLOW, Color.ORANGE]
         self.secret = Guess()
         self.guesses: list[Guess] = []
         if game_type == GameType.HUMAN_SOLVING:

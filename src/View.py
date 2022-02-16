@@ -16,26 +16,33 @@ class View:
         else:
             self.draw_cli()
 
-    def draw_cli(self):
-        self.clear_screen()
+    def draw_cli(self, clear=True):
+        if clear:
+            self.clear_screen()
         print("Colors: ", end="")
         for color in self.data.colors:
             if color != Color.NONE:
                 print(color.name[0], end="")
         print("")
         if self.data.game_type == GameType.HUMAN_SOLVING:
-            print(self.data.secret.cli())
+            print("[ * * * * ]")
+            #print(self.data.secret.cli())
         else:
             print(self.data.secret.cli())
         print("-----------")
         for guess in self.data.guesses:
             print(guess.cli())
 
-    def game_over(self):
-        self.clear_screen()
-        print("Game over")
+    def victory(self):
+        self.draw(False)
+        print("\nYou guessed the code!")
         print(f"Secret: {self.data.secret.cli()}")
 
-    def clear_screen(self):
-        for i in range(100):
+    def game_over(self):
+        self.draw(False)
+        print("\nGame over")
+        print(f"Secret: {self.data.secret.cli()}")
+
+    def clear_screen(self, rng=100):
+        for i in range(rng):
             print("")
