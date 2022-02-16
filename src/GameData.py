@@ -50,6 +50,18 @@ class Guess:
         self.c4 = c4
         self.answer: list[Answer] = []
 
+    def add(self, color):
+        if self.c1 == Color.NONE:
+            self.c1 = color
+        elif self.c2 == Color.NONE:
+            self.c2 = color
+        elif self.c3 == Color.NONE:
+            self.c3 = color
+        elif self.c4 == Color.NONE:
+            self.c4 = color
+            return True
+        return False
+
     def randomize(self):
         self.c1 = Color(1).random()
         self.c2 = Color(1).random()
@@ -57,12 +69,15 @@ class Guess:
         self.c4 = Color(1).random()
         return self
 
+    def lst(self):
+        return [self.c1.char(), self.c2.char(), self.c3.char(), self.c4.char()]
+
     def cli(self):
         a = self.cli_answer()
         if len(a) == 0:
             return f"[ {self.c1.char()} {self.c2.char()} {self.c3.char()} {self.c4.char()} ]"
         else:
-            return f"({self.cli_answer()}) [ {self.c1.char()} {self.c2.char()} {self.c3.char()} {self.c4.char()} ]"
+            return f"[ {self.c1.char()} {self.c2.char()} {self.c3.char()} {self.c4.char()} ] ({self.cli_answer()})"
 
     def cli_answer(self):
         r = ""
