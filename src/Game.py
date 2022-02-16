@@ -1,4 +1,5 @@
 from View import *
+from GameData import Guess
 
 class Game:
     def __init__(self) -> None:
@@ -30,6 +31,7 @@ class PlayGame:
         self.play()
 
     def play(self):
+        next_guess = Guess()
         while True:
             inp = input(":")
             self.game.view.draw()
