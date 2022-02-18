@@ -1,62 +1,29 @@
 from View import *
-from GameData import Guess, Color, Answer
+from GameData import Guess, Color
 from Solver import AI, AI_type
-
-def ask_question(question: Guess, solution: Guess):
-    q = question.lst()
-    s = solution.lst()
-    r = []
-    b = w = 0
-    for i in range(len(q)):
-        if q[i] == s[i]:
-            b += 1
-            r.append(i)
-    for d in reversed(r):
-        del q[d]
-        del s[d]
-    for i in range(len(q)):
-        for j in range(len(s)):
-            if q[i] == s[j]:
-                w += 1
-                del s[j]
-                break
-    return b, w
+from Utils import calc_answer, color_of
 
 class Game:
     def __init__(self) -> None:
-        
-        if self.init():
+        if self.choose_mode():
             self.init_play()
         else:
             self.init_watch()
 
-    def new_guess(self, draw=True):
-        if draw:
-            self.view.draw()
-        inp = input(": ").lower().replace(" ", "")
-        if len(inp) == 4:
-            colors = []
-            for c in inp:
-                color = self.color_of(c)
-                if color == Color.NONE:
-                    break
-                colors.append(color)
-            if len(colors) == 4:
-                return Guess(colors[0], colors[1], colors[2], colors[3])
-        return self.new_guess()
+    def choose_mode(self) -> bool:
+        '''
+        Let the user choose if they want to play or watch an ai play
 
-    def fill_answer(self, guess: Guess):
-        black, white = ask_question(guess, self.data.secret)
-        for _ in range(black):
-            guess.answer.append(Answer.BLACK)
-        for _ in range(white):
-            guess.answer.append(Answer.WHITE)
-
-    def color_of(self, char):
-        for color in self.data.colors:
-            if color.name.lower().startswith(char.lower()):
-                return color
-        return Color.NONE
+        Returns:
+            bool: True if play or False if watch
+        '''
+        inp = input("Play or Watch (P|W): ").lower()
+        if inp.startswith("p"):
+            return True
+        elif inp.startswith("w"):
+            return False
+        else:
+            return self.choose_mode()
 
     def init_play(self):
         self.data = GameData(GameType.HUMAN_SOLVING)
@@ -68,14 +35,19 @@ class Game:
         self.view = View(ViewType.CLI, self.data)
         WatchGame(self)
 
-    def init(self) -> bool:
-        inp = input("Play or Watch (P|W): ").lower()
-        if inp.startswith("p"):
-            return True
-        elif inp.startswith("w"):
-            return False
-        else:
-            return self.init()
+    def new_guess(self, opt=""):
+        self.view.draw()
+        inp = input(f"{opt}: ").lower().replace(" ", "")
+        if len(inp) == 4:
+            colors = [color_of(self.data.colors, c) for c in inp]
+            if Color.NONE not in colors:
+                return Guess(colors[0], colors[1], colors[2], colors[3])
+        return self.new_guess()  # Recursive call if input is wrong
+
+    def fill_answer(self, guess: Guess):
+        guess.black_pegs, guess.white_pegs = calc_answer(guess, self.data.secret)
+
+    
 
 class PlayGame:
     def __init__(self, game: Game) -> None:
@@ -98,19 +70,29 @@ class PlayGame:
 class WatchGame:
     def __init__(self, game: Game) -> None:
         self.game = game
-        self.ai = AI(self, AI_type.RANDOM)
+        self.ai = AI(self.game, self.choose_ai())
         self.choose_secret()
         self.start()
 
+    def choose_ai(self):
+        for ai in AI_type:
+            print(f"{ai.name} = {ai.value}")
+        choice = input("Choose an AI: ")
+        for ai in AI_type:
+            if str(ai.value) == choice:
+                return ai
+        return self.choose_ai()
+
     def choose_secret(self):
-        self.game.data.secret = self.game.new_guess(False)
+        self.game.data.secret = self.game.new_guess("Secret")
 
     def start(self):
         while True:
-            next_guess = self.ai.new_guess()
+            next_guess, n = self.ai.new_guess()
             self.game.fill_answer(next_guess)
             self.game.data.guesses.append(next_guess)
             self.game.view.draw()
+            print(f"Posible answers: {n}")
             if next_guess == self.game.data.secret:
                 self.game.view.victory()
                 break

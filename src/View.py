@@ -10,11 +10,11 @@ class View:
         self.type = type
         self.data = data
 
-    def draw(self):
+    def draw(self, clear=True):
         if self.type == ViewType.GUI:
             pass
         else:
-            self.draw_cli()
+            self.draw_cli(clear)
 
     def draw_cli(self, clear=True):
         if clear:
@@ -25,21 +25,21 @@ class View:
                 print(color.name[0], end="")
         print("")
         if self.data.game_type == GameType.HUMAN_SOLVING:
-            print("[ * * * * ]")
+            print("  [ * * * * ]")
             #print(self.data.secret.cli())
         else:
             print(self.data.secret.cli())
-        print("-----------")
-        for guess in self.data.guesses:
-            print(guess.cli())
+        print("----------------------")
+        for ind, guess in enumerate(self.data.guesses):
+            print(f"{ind+1}: {guess.cli()}")
 
     def victory(self):
-        self.draw(False)
+        self.draw()
         print("\nYou guessed the code!")
         print(f"Secret: {self.data.secret.cli()}")
 
     def game_over(self):
-        self.draw(False)
+        self.draw()
         print("\nGame over")
         print(f"Secret: {self.data.secret.cli()}")
 

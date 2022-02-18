@@ -35,38 +35,20 @@ class Color(Enum):
     def __str__(self) -> str:
         return self.__repr__()
 
-class Answer(Enum):
-    WHITE = auto()
-    BLACK = auto()
-
-    def char(self):
-        return self.name[0]
-
 class Guess:
     def __init__(self, c1:Color=Color.NONE, c2:Color=Color.NONE, c3:Color=Color.NONE, c4:Color=Color.NONE) -> None:
         self.c1 = c1
         self.c2 = c2
         self.c3 = c3
         self.c4 = c4
-        self.answer: list[Answer] = []
-
-    def add(self, color):
-        if self.c1 == Color.NONE:
-            self.c1 = color
-        elif self.c2 == Color.NONE:
-            self.c2 = color
-        elif self.c3 == Color.NONE:
-            self.c3 = color
-        elif self.c4 == Color.NONE:
-            self.c4 = color
-            return True
-        return False
+        self.black_pegs = 0
+        self.white_pegs = 0
 
     def randomize(self):
-        self.c1 = Color(1).random()
-        self.c2 = Color(1).random()
-        self.c3 = Color(1).random()
-        self.c4 = Color(1).random()
+        self.c1 = Color(randint(1, 6))
+        self.c2 = Color(randint(1, 6))
+        self.c3 = Color(randint(1, 6))
+        self.c4 = Color(randint(1, 6))
         return self
 
     def lst(self):
@@ -80,10 +62,9 @@ class Guess:
             return f"[ {self.c1.char()} {self.c2.char()} {self.c3.char()} {self.c4.char()} ] ({self.cli_answer()})"
 
     def cli_answer(self):
-        r = ""
-        for a in self.answer:
-            r = f"{r}{a.char()}"
-        return r
+        b = "".join("B" for _ in range(self.black_pegs))
+        w = "".join("W" for _ in range(self.white_pegs))
+        return f"{b}{w}"
 
     def __eq__(self, other):
         return self.c1 == other.c1 and self.c2 == other.c2 and self.c3 == other.c3 and self.c4 == other.c4
@@ -108,11 +89,3 @@ class GameData:
 
     def __str__(self) -> str:
         return self.__repr__()
-        
-
-if __name__ == "__main__":
-    game = GameData(GameType.HUMAN_SOLVING)
-    game2 = GameData(GameType.AI_SOLVING)
-
-    print(game)
-    print(game2)
