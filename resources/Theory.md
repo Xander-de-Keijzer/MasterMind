@@ -8,10 +8,12 @@
 ### Color filtering
 
 > G: AABB A: (0,1)
+
 From this you can conclude that the answer should contain either A or B,
 all answers that do NOT contain either A or B are no longer possible.
 
 > G: ABCD A: (0,1)
+
 All ansers NOT containing either A|B|C|D can be filtered out
 
 ### Positional filtering
@@ -31,6 +33,7 @@ From these examples we can create universal rules for any amount of black or whi
 > G: ABCD A: (n,*)
 
 The answer must yield true for n of these conditions
+
 > AXXX + XBXX + XXCX + XXXD >= n
 
 ### Universal Color Filter
