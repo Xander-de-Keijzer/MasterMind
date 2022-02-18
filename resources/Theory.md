@@ -1,6 +1,6 @@
 
 
-# Filter out posible answers based on any answers given
+# Filter out posible questions based on any answers given
 
 > G = Guess 
 > A = Answer (Black,White)
