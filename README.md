@@ -1,6 +1,13 @@
 ## MasterMind
 #### AI Project HU
 ___
+
+> Resources
+
+In the resources directory there are 2 importend files to read,
+Theory.md explaining my thought processes
+Solutions.md explaining the algorithms pros and cons
+
 > How to play
 
 The game is played with 6 colors and guess contains 4 colors.
