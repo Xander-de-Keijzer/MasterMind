@@ -4,7 +4,7 @@ ___
 
 > Resources
 
-In the resources directory there are 2 importend files to read,
+In the resources directory there are 2 important files to read,
 Theory.md explaining how I came up with a solution to filter questions
 Solutions.md explaining the algorithms pros and cons
 
