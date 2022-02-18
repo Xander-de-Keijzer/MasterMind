@@ -4,11 +4,18 @@ from Solver import AI, AI_type
 from Utils import calc_answer, color_of
 
 class Game:
-    def __init__(self) -> None:
-        if self.choose_mode():
-            self.init_play()
+    def __init__(self, run=True, data=None, view=None) -> None:
+        if not run:
+            self.data = data
+            self.view = view
         else:
-            self.init_watch()
+            if self.choose_mode():
+                self.init_play()
+            else:
+                self.init_watch()
+
+    def sim(self, secret):
+        self.data.secret = secret
 
     def choose_mode(self) -> bool:
         '''
@@ -88,7 +95,7 @@ class WatchGame:
 
     def start(self):
         while True:
-            next_guess, n = self.ai.new_guess()
+            next_guess, n = self.ai.new_guess(1)
             self.game.fill_answer(next_guess)
             self.game.data.guesses.append(next_guess)
             self.game.view.draw()
