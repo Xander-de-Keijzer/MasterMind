@@ -1,5 +1,3 @@
-from distutils.dep_util import newer_group
-from importlib_metadata import pass_none
 from View import *
 from GameData import Guess, Color, Answer
 from Solver import AI, AI_type
